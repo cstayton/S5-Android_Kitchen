@@ -36,8 +36,16 @@ else
 
 echo "Please wait..."
 while read line; do
+	if [ -e $line ] ; then
+		cp -fv $line ../../../removed
+		sleep .1
+	fi
+done < $BLOAT
+
+while read line; do
 	rm -fv $line
 	sleep .1
 done < $BLOAT
 fi
+
 exit 0
