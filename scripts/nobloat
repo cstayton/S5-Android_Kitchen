@@ -1,0 +1,43 @@
+############################################################################
+#
+# Copyright (c) 2014 - cstayton (castayton@gmail.com)
+#
+# Android Kitchen is 100% free.  This script file is intended for personal
+# and/or educational use only.  It may not be duplicated for monetary
+# benefit or any other purpose without the permission of the developer.
+#
+############################################################################
+clear
+echo
+echo "***************************************************************************"
+echo "* This will remove bloatware from your ROM based on the entries created   *"
+echo "* in /scripts/nobloat.txt file. Added entries to this text file must be   *"
+echo "* the name of the APK file only do not include the path. Your ROM must be *"
+echo "* De-Odexed prior to running this task.                                   *"
+echo "***************************************************************************"
+scripts/press_enter
+
+BLOAT=../../../scripts/nobloat.txt
+
+if [ ! -d WORKING_* ] ; then
+	echo "No working folder found, create your working folder first"
+	scripts/press_enter
+	exit 1
+fi
+if [ -e WORKING_*/system/app/*.odex ] ; then
+	echo "Warning, ODEX files found, You must De-Odex your ROM first."
+	scripts/press_enter
+	exit 1
+else
+	cd WORKING_*/system/app
+
+# - Remove bloatware based on nobloat.txt
+# - only remove *.apks nothing else.
+
+echo "Please wait..."
+while read line; do
+	rm -fv $line
+	sleep .1
+done < $BLOAT
+fi
+exit 0

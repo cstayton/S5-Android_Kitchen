@@ -1,0 +1,66 @@
+#!/system/bin/sh
+
+export PATH=${PATH}:/system/bin:/system/xbin
+
+while true ; do
+	if [ "0`getprop sys.boot_completed`" -ne "0" ] ; then
+		break
+	else
+		echo "Wait..."
+	fi
+done
+
+#
+# Print Startup Banner
+#
+
+M=`getprop ro.product.model`
+V=`getprop ro.product.version`
+L="log -p i -t cm"
+$L "**************************************";
+$L "          Android sysinit";
+$L "        init.d & userinit.d";
+$L "        Support environment";
+$L "       " $M
+$L "       " $V
+$L "**************************************";
+
+##Check for system write access and grant if read only##
+##Log results to /data/local/init.log##
+if [ -w /system ] ; then
+	echo "/system is already Read/Write" $(date) > /data/local/init.log
+	$L "/system is already Read/Write" $(date)
+else
+	echo "Applying Read/Write access to /system" $(date) > /data/local/init.log
+	$L "Applying Read/Write access to /system" $(date)
+	sysrw
+fi
+
+##Apply execute Privileges to init folders##
+##And run all init scripts in init.d folder##
+##Once completed run all scripts in userinit.d folder##
+##the caviat is that init.d MUST exist if init.d,##
+##folder is missing sysinit will error out and exit##
+##this prevents userinit.d from running since it is##
+##dependant on init.d scripts completing first.##
+
+if [ -d /system/etc/init.d ] ; then
+	chmod 0755 /system/etc/init.d
+	chmod -R 0777 /system/etc/init.d/*
+	logwrapper run-parts /system/etc/init.d/
+else
+	echo "!!Warning!! No init.d support exiting" $(date) >> /data/local/init.log
+	$L "!!Warning!! No init.d support exiting" $(date)
+	exit 1
+fi
+
+if [ -d /system/etc/userinit.d ] ; then
+	chmod 0755 /system/etc/userinit.d
+	chmod -R 0777 /system/etc/userinit.d/*
+	logwrapper run-parts /system/etc/userinit.d/
+else
+	echo "!!Warning!! No userinit.d support exiting" $(date) >> /data/local/init.log
+	$L "!!Warning!! No userinit.d support exiting" $(date)
+fi
+
+exit 0

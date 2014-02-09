@@ -1,0 +1,97 @@
+############################################################################
+#
+# Copyright (c) 2014 - cstayton (cstayton@gmail.com)
+#
+# Android Kitchen is 100% free.  This script file is intended for personal
+# and/or educational use only.  It may not be duplicated for monetary
+# benefit or any other purpose without the permission of the developer.
+#
+############################################################################
+
+clear
+
+echo
+echo '*******************************************************'
+echo '* Include components or modifications in the ROM.     *'
+echo '* Place your components/mods in coresponding folders, *'
+echo '* inside the tools/components folder. this will       *'
+echo '* provide the ability to build your ROM clean and     *'
+echo '* keep your customizations seperate.                  *'
+echo '*******************************************************'
+echo
+        echo "Include customizations (y/n)?"
+        echo 
+        echo "  y = Include; components and customizations will be included,"
+        echo "      this cannot be undone recomend you backup working folder first."
+        echo "  n = Cancel; No changes will be included in your working "
+        echo "      folder."
+        echo
+         
+        echo -n "? (default: y): "
+	read proceed_change 
+	
+if [ "$proceed_change" != "n" ]
+	then
+
+	echo
+	echo "  Backup your working folder first (y/n)?"
+	echo -n "? (default: y): "
+	read proceed_backup
+
+	echo
+	echo "  Use Pre-Configured META-INF (y/n)?"
+	echo -n "? (default: n): "
+	read proceed_preconfig
+
+if [ "$proceed_backup" != "n" ]
+	then
+          if [ -d BUILD_BACKUP ] ; then
+	    echo "  Found existing Backup deleting..."
+	    rm -fr BUILD_BACKUP
+	    echo "  Done..."
+	    mkdir BUILD_BACKUP
+	    echo "  Backing up working folder Please Wait..."  
+	    cp -fr WORKING_* BUILD_BACKUP
+	    echo "  Backup Complete..."
+	    sleep 2
+	  else
+	    mkdir BUILD_BACKUP
+	    echo "  Backing up working folder Please Wait..."   
+	    cp -fr WORKING_* BUILD_BACKUP
+	    echo "  Backup Complete..."
+	    sleep 2
+	  fi
+fi
+
+		if [ -d WORKING_* ]
+		then
+		  echo Found working folder
+		else
+		  echo No working folder found!
+		  exit 0
+		fi
+
+		cd WORKING_*
+		echo `pwd`
+		echo
+		ls -lrt
+		echo
+		cp -frv ../projects/components/* .
+		cd ..
+
+if [ "$proceed_preconfig" = "y" ]
+	then
+	  cd WORKING_*
+	  rm -r META-INF
+	  cd ..
+	  cp -frv projects/preconfig/* WORKING_*
+else
+	  echo
+	  echo "Not using Pre-Configured META-INF"
+fi	  
+
+else
+       echo
+       echo "Cancelling - No components or customizations will be included."
+       echo
+fi
