@@ -72,10 +72,10 @@ do
   clear
   device_name=`scripts/get_device_name`
   echo
-  echo "==========================================================================="
-  echo " S5 Android Kitchen $version - by cstayton (xda-developers.com)            "
-  echo " Device Type ($device_name)  - original author dsixda (xda-developers.com) "
-  echo "==========================================================================="
+  echo "=============================================================================="
+  echo " S5 Android Kitchen $version - by cstayton (xda-developers.com)               "
+  echo " Device Type ($device_name) - original author dsixda (xda-developers.com)     "
+  echo "=============================================================================="
   echo 
   echo "> MAIN MENU"
   echo
