@@ -43,6 +43,7 @@ fi
 ##folder is missing sysinit will error out and exit##
 ##this prevents userinit.d from running since it is##
 ##dependant on init.d scripts completing first.##
+##logging to /data/local/init.log##
 
 if [ -d /system/etc/init.d ] ; then
 	chmod 0755 /system/etc/init.d
