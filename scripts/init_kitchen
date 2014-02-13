@@ -27,6 +27,8 @@ rm -f original_update/.DS_Store
 rm -f .DS_Store
 rm -f unzip.log
 
+dir_list=( removed original_update projects 
+
 bin_list=( mkbootfs mkbootfs.exe mkbootimg mkbootimg.exe rsa.o sha.o )
 
 for mkboot_bin in ${bin_list[@]}

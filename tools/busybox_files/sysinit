@@ -61,6 +61,7 @@ if [ -d /system/etc/userinit.d ] ; then
 else
 	echo "!!Warning!! No userinit.d support exiting" $(date) >> /data/local/init.log
 	$L "!!Warning!! No userinit.d support exiting" $(date)
+	exit 1
 fi
 
 exit 0
