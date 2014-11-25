@@ -415,6 +415,18 @@ else
   fi
 fi
 
+if [ ! -d system/priv-app ]
+then
+  deodex_priv_app_status="NO FOLDER"
+else
+  if [ "`find system/priv-app -name *.odex`" == "" ]
+  then
+    deodex_priv_app_status=YES
+  else
+    deodex_priv_app_status=NO
+  fi
+fi
+
 cd ..
 
 
@@ -497,6 +509,7 @@ echo " Nano text editor (depricated)  : $nano_status"
 echo " Bash support (depricated)      : $bash_status"
 echo " /system/framework is deodexed  : $deodex_fr_status"
 echo " /system/app is deodexed        : $deodex_app_status"
+echo " /system/priv-app is deodexed   : $deodex_priv_app_status"
 
 if [ "$is_galaxy_ss2" == "1" ] || [ "$is_galaxy_s3_exynos" == "1" ] || \
      [ "$is_gnote2_common" == "1" ] || [ "$is_galaxy_s4_common" == "1" ]
@@ -526,5 +539,3 @@ then
 fi
 
 rm -rf BOOT-EXTRACTED
-
-

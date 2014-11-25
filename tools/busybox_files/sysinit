@@ -1,14 +1,30 @@
 #!/system/bin/sh
 
-export PATH=${PATH}:/system/bin:/system/xbin
+export PATH=$PATH:/system/xbin:/sbin:/vendor/bin:/system/sbin:/system/bin
+if [ -d "/data/local/busybox*/xbin" ]; then
+	export PATH=$PATH:`ls -d /data/local/busybox*/xbin 2>/dev/null`;
+fi
 
-while true ; do
-	if [ "0`getprop sys.boot_completed`" -ne "0" ] ; then
-		break
-	else
-		echo "Wait..."
-	fi
-done
+LOG=/data/local/init.log;
+
+if [ -e $LOG ]; then
+	rm $LOG;
+fi;
+
+touch $LOG;
+echo "# LOGGING ENGINE" > $LOG;
+##Re-Mount /system, /data and /cache for better performance
+sync
+
+busybox sleep 2
+
+#while true ; do
+#	if [ "0`getprop sys.boot_completed`" -ne "0" ] ; then
+#		break
+#	else
+#		echo "Wait..."
+#	fi
+#done
 
 #
 # Print Startup Banner
@@ -18,7 +34,7 @@ M=`getprop ro.product.model`
 V=`getprop ro.product.version`
 L="log -p i -t cm"
 $L "**************************************";
-$L "          Android sysinit";
+$L "          KoolKit sysinit";
 $L "        init.d & userinit.d";
 $L "        Support environment";
 $L "       " $M
@@ -28,12 +44,13 @@ $L "**************************************";
 ##Check for system write access and grant if read only##
 ##Log results to /data/local/init.log##
 if [ -w /system ] ; then
-	echo "/system is already Read/Write" $(date) > /data/local/init.log
-	$L "/system is already Read/Write" $(date)
+
+	echo "/system is already Read/Write" $( date +"%m-%d-%Y %H:%M:%S" ) >> $LOG;
+	$L "/system is already Read/Write" $( date +"%m-%d-%Y %H:%M:%S" )
 else
-	echo "Applying Read/Write access to /system" $(date) > /data/local/init.log
-	$L "Applying Read/Write access to /system" $(date)
-	sysrw
+	echo "Applying Read/Write access to /system" $( date +"%m-%d-%Y %H:%M:%S" ) >> $LOG;
+	$L "Applying Read/Write access to /system" $( date +"%m-%d-%Y %H:%M:%S" )
+	mount -o remount,rw /system
 fi
 
 ##Apply execute Privileges to init folders##
@@ -43,15 +60,14 @@ fi
 ##folder is missing sysinit will error out and exit##
 ##this prevents userinit.d from running since it is##
 ##dependant on init.d scripts completing first.##
-##logging to /data/local/init.log##
 
 if [ -d /system/etc/init.d ] ; then
 	chmod 0755 /system/etc/init.d
 	chmod -R 0777 /system/etc/init.d/*
 	logwrapper run-parts /system/etc/init.d/
 else
-	echo "!!Warning!! No init.d support exiting" $(date) >> /data/local/init.log
-	$L "!!Warning!! No init.d support exiting" $(date)
+	echo "!!Warning!! No init.d support exiting" $( date +"%m-%d-%Y %H:%M:%S" ) >> $LOG;
+	$L "!!Warning!! No init.d support exiting" $( date +"%m-%d-%Y %H:%M:%S" )
 	exit 1
 fi
 
@@ -60,8 +76,8 @@ if [ -d /system/etc/userinit.d ] ; then
 	chmod -R 0777 /system/etc/userinit.d/*
 	logwrapper run-parts /system/etc/userinit.d/
 else
-	echo "!!Warning!! No userinit.d support exiting" $(date) >> /data/local/init.log
-	$L "!!Warning!! No userinit.d support exiting" $(date)
+	echo "!!Warning!! No userinit.d support exiting" $( date +"%m-%d-%Y %H:%M:%S" ) >> $LOG;
+	$L "!!Warning!! No userinit.d support exiting" $( date +"%m-%d-%Y %H:%M:%S" )
 	exit 1
 fi
 

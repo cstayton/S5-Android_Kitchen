@@ -16,6 +16,7 @@ chmod 755 tools/zipalign_files/*
 chmod 755 tools/samsung_files/unpack-initramfs
 chmod 755 scripts/plugins/*
 chmod 755 tools/deodex_files/api_level.txt
+rm -f deodex*.log
 rm -f symlinks.log
 rm -f tools/explore2fs_windows/explore*.txt
 rm -f tools/ext2read_windows/ext2*.log
@@ -27,7 +28,7 @@ rm -f original_update/.DS_Store
 rm -f .DS_Store
 rm -f unzip.log
 
-dir_list=( removed original_update projects 
+dir_list=( removed original_update projects )
 
 bin_list=( mkbootfs mkbootfs.exe mkbootimg mkbootimg.exe rsa.o sha.o )
 

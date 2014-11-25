@@ -136,9 +136,11 @@ do
 
   num_odex_fr=`find system/framework | grep -c "\.odex$"`
   num_odex_app=`find system/app | grep -c "\.odex$"`
+  num_odex_priv_app=`find system/priv-app | grep -c "\.odex$"`
 
   echo "Found $num_odex_fr *.odex files in /system/framework"
   echo "Found $num_odex_app *.odex files in /system/app"
+  echo "Found $num_odex_priv_app *.odex files in /system/priv-app"
 
   if [ -e preload/symlink/system/app/preload_apk_list ]
   then
@@ -149,7 +151,7 @@ do
   fi
 
 
-  if [ $num_odex_fr == 0 ] && [ $num_odex_app == 0 ]
+  if [ $num_odex_fr == 0 ] && [ $num_odex_app == 0 ] && [ $num_odex_priv_app == 0 ]
   then
     echo
     echo "No need to de-odex!"
@@ -158,7 +160,7 @@ do
     exit 0
   fi
 
-  if [ $num_odex_fr == 0 ] && [ $num_odex_app -gt 0 ]
+  if [ $num_odex_fr == 0 ] && [ $num_odex_app -gt 0 ] && [ $num_odex_priv_app -gt 0 ]
   then
     echo
     echo "WARNING: You must deodex the app folder if you had already"
@@ -181,9 +183,9 @@ do
   echo "Enter a choice:"
   echo
 
-  if [ $num_odex_app -gt 0 ] || [ $num_odex_fr -gt 0 ]
+  if [ $num_odex_app -gt 0 ] || [ $num_odex_priv_app -gt 0 ] || [ $num_odex_fr -gt 0 ]
   then
-    echo " bb  = Back up both folders (do first!)"
+    echo " bb  = Back up all folders (do first!)"
   fi
 
   echo "  v  = Set Android OS version (Current API level = $api_level)"
@@ -199,9 +201,13 @@ do
   then
     echo "  a  = Deodex /system/app"
   fi
-  if [ $num_odex_app -gt 0 ] && [ $num_odex_fr -gt 0 ]
+    if [ $num_odex_priv_app -gt 0 ]
   then
-    echo "  b  = Deodex both folders (recommended)"
+    echo "  aa  = Deodex /system/priv-app"
+  fi
+  if [ $num_odex_app -gt 0 ] && [ $num_odex_fr -gt 0 ] && [ $num_odex_priv_app -gt 0 ]
+  then
+    echo "  b  = Deodex all folders (recommended)"
   fi
   echo "  s  = Deodex a single file"
   echo "  x  = Exit"
@@ -213,10 +219,14 @@ do
   list1=( app )
   list2=( framework )
   list3=( framework app )
+  list4=( framework app priv-app )
 
   if [ "$enterChoice" == "a" ]
   then
     dir_list=app
+  elif [ "$enterChoice" == "aa" ]
+  then
+    dir_list=priv-app
   elif [ "$enterChoice" == "v" ]
   then
     cd ..
@@ -227,7 +237,7 @@ do
     dir_list=framework
   elif [ "$enterChoice" == "b" ] 
   then
-    dir_list="framework app"
+    dir_list="framework app priv-app"
   elif [ "$enterChoice" == "s" ]
   then
     cd ..
@@ -240,7 +250,7 @@ do
     # Backup
     #
 
-    folder_list=( framework app )
+    folder_list=( framework app priv-app )
     date_str=`date '+%m%d%y_%H%M%S'`
 
     for f in ${folder_list[@]}
@@ -297,11 +307,13 @@ do
   fi
 
   num_odex_app=`find system/app | grep -c "\.odex$"`
+  num_odex_priv_app=`find system/priv-app | grep -c "\.odex$"`
   num_apk_app=`find system/app | grep -c "\.apk$"`
   num_odex_fr=`find system/framework | grep -c "\.odex$"`
 
   echo
   echo "$num_odex_app *.odex files remain in system/app"
+  echo "$num_odex_priv_app *.odex files remain in system/priv-app"
   echo "$num_odex_fr *.odex files remain in system/framework"
 
   if [ $num_odex_fr == 0 ] && [ $num_odex_app -gt 0 ]

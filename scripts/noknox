@@ -1,0 +1,78 @@
+############################################################################
+#
+# Copyright (c) 2014 - cstayton (castayton@gmail.com)
+#
+# Android Kitchen is 100% free.  This script file is intended for personal
+# and/or educational use only.  It may not be duplicated for monetary
+# benefit or any other purpose without the permission of the developer.
+#
+############################################################################
+clear
+echo
+echo "***************************************************************************"
+echo "* This will remove Samsung Knox from the ROM based on the entries created *"
+echo "* in /scripts/noknox.txt file. Added entries to this text file must be    *"
+echo "* the name of the APK file only do not include the path. Your ROM must be *"
+echo "* De-Odexed prior to running this task.                                   *"
+echo "***************************************************************************"
+scripts/press_enter
+
+KNOX=../../../scripts/noknox.txt
+
+if [ ! -d WORKING_* ] ; then
+	echo "No working folder found, create your working folder first"
+	scripts/press_enter
+	exit 1
+fi
+if [ -e WORKING_*/system/app/*.odex ] ; then
+	echo "Warning, ODEX files found, You must De-Odex your ROM first."
+	scripts/press_enter
+	exit 1
+else
+	cd WORKING_*/system/app
+
+# - Remove Samsung knox components
+# - only remove *.apks nothing else.
+
+echo "Please wait...DeKnoxing /system/app"
+while read line; do
+	if [ -e $line ] ; then
+		cp -fv $line ../../../knox
+		sleep .1
+	fi
+done < $KNOX
+
+while read line; do
+	rm -fv $line
+	sleep .1
+done < $KNOX
+fi
+
+cd ../priv-app
+
+echo "Please wait...DeKnoxing /system/priv-app"
+while read line; do
+	if [ -e $line ] ; then
+		cp -fv $line ../../../knox
+		sleep .1
+	fi
+done < $KNOX
+
+while read line; do
+	rm -fv $line
+	sleep .1
+done < $KNOX
+
+echo "Please wait...DeKnoxing /system"
+cd ../
+rm -rf container
+rm -rf containers
+rm -rf preloadedsso
+cd etc
+rm -f knox_sensitive_columns.xml
+cd secure_storage
+rm -rf com.sec.knox.seandroid
+rm -rf com.sec.knox.store
+cd ../../..
+
+exit 0

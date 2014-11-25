@@ -18,6 +18,7 @@ echo "**************************************************************************
 scripts/press_enter
 
 BLOAT=../../../scripts/nobloat.txt
+CSC=../../../scripts/csc.txt
 
 if [ ! -d WORKING_* ] ; then
 	echo "No working folder found, create your working folder first"
@@ -34,7 +35,7 @@ else
 # - Remove bloatware based on nobloat.txt
 # - only remove *.apks nothing else.
 
-echo "Please wait..."
+echo "Please wait...DeBloating /system/app"
 while read line; do
 	if [ -e $line ] ; then
 		cp -fv $line ../../../removed
@@ -46,6 +47,30 @@ while read line; do
 	rm -fv $line
 	sleep .1
 done < $BLOAT
+fi
+
+cd ../priv-app
+
+echo "Please wait...DeBloating /system/priv-app"
+while read line; do
+	if [ -e $line ] ; then
+		cp -fv $line ../../../removed
+		sleep .1
+	fi
+done < $BLOAT
+
+while read line; do
+	rm -fv $line
+	sleep .1
+done < $BLOAT
+
+echo "Please wait...Cleaning up /system"
+cd ../etc
+while read line; do
+	rm -fv $line
+	sleep .1
+done < $CSC
+
 fi
 
 exit 0

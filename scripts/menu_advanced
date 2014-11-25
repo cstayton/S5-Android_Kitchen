@@ -32,8 +32,10 @@ do
   echo " 16 - Sign APK or ZIP file(s)" 
   echo " 17 - Convert update-script or updater-script"
   echo " 18 - Remove Bloatware from WORKING Folder"
-  echo " 19 - Include customizations/components"
-  echo " 20 - Plugin scripts"
+  echo " 19 - Remove Samsung Knox from WORKING Folder"  
+  echo " 20 - Remove OTA Components from WORKING Folder" 
+  echo " 21 - Include customizations/components"
+  echo " 22 - Plugin scripts"
   echo
   echo " 99 - Build ROM from working folder"
   echo "  0 - BACK TO MAIN MENU"
@@ -57,8 +59,10 @@ do
       16) scripts/sign_files; continue;;
       17) scripts/update_script_convert_menu; continue;;
       18) scripts/nobloat; continue;;	
-      19) scripts/include_components_script;;
-      20) scripts/run_plugins; continue;;
+      19) scripts/noknox; continue;;	  
+      20) scripts/no_ota; continue;;
+	  21) scripts/include_components_script; continue;;
+      22) scripts/run_plugins; continue;;
       99) scripts/build_rom;;
       0) exit 1;;
       *) echo "Invalid option"; continue;;

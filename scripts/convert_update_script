@@ -14,7 +14,42 @@
 # $1 = "for_zip" - use this option after update.zip created
 # $2 = yes/no (express build mode) - relies on $1 being present
 #
+android_os=`scripts/get_build_prop_val ro.build.version.release`
 
+if [ "$android_os" == "4.4.1" ] || [ "$android_os" == "4.4.2" ] || [ "$android_os" == "4.4.3" ] || [ "$android_os" == "4.4.4" ]
+then
+	echo ""
+	echo "********************************************************"
+	echo "* You are building an Android KitKat 4.4.x based ROM   *"
+	echo "* You must use a preconfigured updater-script file     *"
+	echo "* A prebuilt updater-script will be copied into your   *"
+	echo "* WORKING_* ROM folder and the existing update-script  *"
+	echo "* will be renamed, so this operation can be reversed   *"
+	echo "********************************************************"
+	echo ""
+
+	echo -n "? (default: y): "
+	read do_script
+
+	if [ "$do_script" != "n" ]
+	then
+
+		if [ -d WORKING_* ]
+		then
+
+		cd WORKING_*
+		cd META-INF/com/google/android
+		mv update-script update-script.bak
+		cp -f ../../../../../tools/update_files/kitkat/updater-script .
+		cp -f ../../../../../tools/update_files/kitkat/update-binary .
+		exit 0
+	else
+		echo
+		echo Working folder not found, you will need to create one!
+		exit 0
+		fi
+	fi
+fi
 
 if [ "$1" == "" ]
 then
@@ -859,4 +894,3 @@ else
 fi
 
 cd ../../../../..
-

@@ -1,0 +1,21 @@
+
+# Galaxy S5 SM-G900A
+
+change_mnt=yes
+
+param1=ext4
+param2=EMMC
+
+param1_cache=vfat
+param2_cache=MTD
+
+sys_mnt=\/dev\/block\/mmcblk0p23
+cache_mnt=\/dev\/block\/mmcblk0p24
+boot_mnt=\/dev\/block\/mmcblk0p15
+data_mnt=\/dev\/block\/mmcblk0p25
+sdcard_mnt=???
+
+modem_mnt=\/dev\/block\/mmcblk0p2
+
+fix_boot2=yes
+

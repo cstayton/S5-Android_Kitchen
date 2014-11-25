@@ -1,0 +1,43 @@
+echo
+echo "=================================================================================="
+echo " 		       Hosts Updater plugin V.2: by -Mr. X- AKA Juggalo_X 		"
+echo "			(ziggy741.com xda-developers.com, ppcgeeks.com)			"
+echo "=================================================================================="
+echo
+echo "=================================================================================="
+echo " This will update your host fille in your kitchen to try an make your android ROM "
+echo " as ad free as possible, this script uses the same public databases the AdFree  	"
+echo " application. This plugin does not check for updates, it strictly fetches the two "
+echo " public host lists and merges, and them moves them to "WORKING_*/system/etc/hosts""
+echo 
+echo "=================================================================================="
+echo
+
+cd WORKING_*
+
+wget "http://www.mvps.org/winhelp2002/hosts.txt" -O - | grep -iv localhost | grep -iv '^#' | grep -iv "^$" > mvps_hosts
+
+wget "http://pgl.yoyo.org/adservers/serverlist.php?showintro=0;hostformat=hosts" -O - | grep -iv localhost | grep -iv '^#' | grep -v "^$" | grep -iv '^<' | grep -iv '^A' > yoyo_hosts
+
+cat mvps_hosts yoyo_hosts | sort | uniq -u | tr -d '\r' > hosts1
+
+cat ../scripts/plugins/header hosts1 > hosts2
+
+sed 's/127.0.0.1  /127.0.0.1 /g' hosts2 > hosts
+
+rm system/etc/hosts
+
+mv hosts system/etc/hosts
+
+rm mvps_hosts	
+
+rm yoyo_hosts
+
+rm hosts1
+
+rm hosts2
+
+echo DONE!
+
+
+

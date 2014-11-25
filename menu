@@ -25,7 +25,7 @@ then
   exit 0
 fi
 
-dir_list=( original_update scripts tools remove OUTPUT_ZIP projects projects/components projects/preconfig )
+dir_list=( original_update scripts tools removed knox ota OUTPUT_ZIP projects projects/components projects/components/system projects/components/system/app projects/components/system/priv-app projects/components/system/etc projects/components/system/framework projects/preconfig )
 error_found=0
 
 for check_dir in ${dir_list[@]}

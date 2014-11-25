@@ -1,0 +1,59 @@
+############################################################################
+#
+# Copyright (c) 2012 - dsixda (dislam@rocketmail.com)
+#
+# Android Kitchen is 100% free.  This script file is intended for personal
+# and/or educational use only.  It may not be duplicated for monetary
+# benefit or any other purpose without the permission of the developer.
+#
+############################################################################
+
+#!/bin/bash
+ 
+version=$1
+ba_ver=0.215
+
+while :
+do
+
+  clear
+
+  echo "============================================================"
+  echo " Android Kitchen $version - by dsixda (xda-developers.com)"
+  echo " Build-A-Rom $ba_ver - by cstayton (xda.developers.com)"  
+  echo "============================================================"
+  echo
+  echo "> Build-A-Rom OPTIONS"
+  echo
+  echo " 01 - Add default Template folders?"
+  echo " 02 - Tools for boot image (unpack/re-pack/etc.)" 
+  echo " 03 - Add /data/app functionality"
+  echo " 04 - Build-A-Rom Cleanup"
+  echo
+  echo " 99 - Build ROM from working folder"
+  echo "  0 - BACK TO ADVANCED MENU"
+  echo
+  echo -n "Enter option: "
+  read opt
+
+  if [ "$opt" != "0" ]
+  then
+    scripts/check_multiple_working
+  fi
+
+  if [ "$?" != "1" ]
+  then
+    case $opt in
+      01) scripts/add_bar_fldr; continue;; 
+      02) scripts/boot_img_tools; continue;; 
+      03) scripts/add_data_app show_help;;
+	  04) scripts/bar_cleanup;;
+      99) scripts/build_rom;;
+      0) exit 1;;
+      *) echo "Invalid option"; continue;;
+    esac
+  fi
+
+#  scripts/press_enter
+
+done

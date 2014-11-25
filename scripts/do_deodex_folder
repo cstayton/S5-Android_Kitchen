@@ -12,8 +12,9 @@
 # This script has two parameters:
 #
 # $1 = folder(s) to deodex under /system (mandatory)
-#       e.g. framework
+#       e.g. "framework"
 #       e.g. "framework app" 
+#		e.g. "framework app priv-app"
 # $2 = whether to enable logging (y or n) (optional) 
 #
 
@@ -33,8 +34,7 @@ cd WORKING_*
 
 num_odex_fr=`find system/framework | grep -c "\.odex$"`
 num_odex_app=`find system/app | grep -c "\.odex$"`
-
-
+num_odex_priv_app=`find system/priv-app | grep -c "\.odex$"`
 #
 # Create log file
 #
@@ -89,6 +89,9 @@ do
   elif [ $folder == app ]
   then
     num_odex_folder=$num_odex_app
+  elif [ $folder == priv-app ]
+  then
+    num_odex_folder=$num_odex_priv_app
   else
     echo
     echo "Error: Folder $folder not valid!"

@@ -1,0 +1,73 @@
+############################################################################
+#
+# Copyright (c) 2014 - cstayton (castayton@gmail.com)
+#
+# Android Kitchen is 100% free.  This script file is intended for personal
+# and/or educational use only.  It may not be duplicated for monetary
+# benefit or any other purpose without the permission of the developer.
+#
+############################################################################
+clear
+echo
+echo "***************************************************************************"
+echo "* This will remove AT&T/Samsung OTA Updates from the ROM based on the     *"
+echo "* entries created in /scripts/no_ota.txt file. Added entries to this text *"
+echo "* file must be the name of the APK file only do not include the path.     *"
+echo "* Your ROM must be De-Odexed prior to running this task.                  *"
+echo "***************************************************************************"
+scripts/press_enter
+
+OTA=../../../scripts/no_ota.txt
+
+if [ ! -d WORKING_* ] ; then
+	echo "No working folder found, create your working folder first"
+	scripts/press_enter
+	exit 1
+fi
+
+if [ -e WORKING_*/system/app/*.odex ] ; then
+	echo "Warning, ODEX files found, You must De-Odex your ROM first."
+	scripts/press_enter
+	exit 1
+else
+	cd WORKING_*/system/app
+
+# - Remove Samsung ota components
+# - only remove *.apks nothing else.
+
+echo "Please wait...Removing OTA from /system/app"
+while read line; do
+	if [ -e $line ] ; then
+		cp -fv $line ../../../ota
+		sleep .1
+	fi
+done < $OTA
+
+while read line; do
+	rm -fv $line
+	sleep .1
+done < $OTA
+fi
+
+cd ../priv-app
+
+echo "Please wait...Removing OTA from /system/priv-app"
+while read line; do
+	if [ -e $line ] ; then
+		cp -fv $line ../../../ota
+		sleep .1
+	fi
+done < $OTA
+
+while read line; do
+	rm -fv $line
+	sleep .1
+done < $OTA
+
+echo "Please wait...Removing OTA from /system"
+rm -f ../etc/fota.cer
+rm -f ../etc/security/otacerts.zip
+rm -f ../csc/omc.xml
+cd ../../..
+
+exit 0

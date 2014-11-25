@@ -1,0 +1,76 @@
+############################################################################
+#
+# Copyright (c) 2012 - dsixda (dislam@rocketmail.com)
+#
+# Android Kitchen is 100% free.  This script file is intended for personal
+# and/or educational use only.  It may not be duplicated for monetary
+# benefit or any other purpose without the permission of the developer.
+#
+############################################################################
+
+
+if [ "$1" == "show_help" ]
+then
+
+  clear
+  echo
+  echo "-----------------------------------------------------------------"
+  echo "The Build-A-Rom Cleanup script removes several predetermined"
+  echo "Applications and directories from the update zip structure"
+  echo "prior to building the ROM, this step is optional and in no way"
+  echo "interferes with the performance of the rom."
+  echo "-----------------------------------------------------------------"
+  echo
+fi
+
+  echo -n "Proceed with Build-A-Rom Cleanup (y/n)? (default: y): "
+  read do_runclean
+
+  if [ "$do_runclean" == "n" ]
+  then
+  echo "Not performing Build-A-Rom Cleanup"
+    exit 0
+  fi
+
+
+cd WORKING_*
+
+#
+# Delete the folder(s)
+#
+
+if [ -d system/addon.d ]
+then
+  echo
+  echo "WARNING: You are deleting System folders"
+  echo
+  echo "Deleting /system/addon.d folder ..."
+  rm -R system/addon.d
+  echo "Deleting /system/terminfo folder ..."
+  rm -R system/etc/terminfo
+fi
+
+if [ -d system/etc/terminfo ]
+then
+  echo
+  echo "WARNING: You are deleting System folders"
+  echo
+  echo "Deleting /system/terminfo folder ..."
+  rm -R system/etc/terminfo
+fi
+
+if [ -d system/app ]
+then
+  echo
+  echo "WARNING: You are deleting system Applications"
+  echo
+  echo "Deleting /system/app/CMFileManager.apk"
+  rm -f system/app/CMFileManager.apk
+  echo "Deleting /system/app/CMWallpapers.apk"
+  rm -f system/app/CMWallpapers.apk
+  echo "Deleting /system/app/ZeroXBenchmark.apk"
+  rm -f system/app/ZeroXBenchmark.apk
+fi
+
+cd ..
+echo "Done..."
