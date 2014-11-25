@@ -1,0 +1,6 @@
+changes that need to be commited
+
+scripts/grep_rom
+scripts/chose_rom
+scripts/ruu_file_to_working_folder
+tools/busybox_files/sysinit
